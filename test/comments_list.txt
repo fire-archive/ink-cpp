@@ -1,0 +1,6 @@
+==== knot ====
+= stitch_one 
+    - - (gatherpoint) Some content.
+    - - (gatherpoint) Some content #2.
+= stitch_two 
+	*	{stitch_one.gatherpoint} Option
