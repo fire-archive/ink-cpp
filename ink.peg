@@ -1,0 +1,31 @@
+# # ? (option, aka zero-or-one)
+# # * (aka Kleene star, zero-or-more) 
+# # + (one-or-more)
+# # a b (with spaces between them) is a 'sequence' expression
+# # a / b is an 'ordered choice' expression
+# # https://github.com/PhilippeSigaud/Pegged/wiki/PEG-Basics
+# # From https://github.com/premek/pink/blob/master/pink/parser.lua
+
+LINES <- LINE*
+
+LINE <- COMM PARA
+
+PARA <- (!COMM .)*
+
+COMM <- COOMOL / COMMML / TODO
+
+TODO <- _ 'TODO:' _ 
+# # Removed '/*'/"comment"
+COMMML <- _ '/*' _ (.'*/')* '*/' _
+# # # Removed '//'/"comment"
+COOMOL <- _ '//' _ #(.NL)* WH
+
+# Removed 'TODO:'/"todo"
+#TODO <- SP 'TODO:' SP (. NL)* WH
+
+# # ADDR <- ID ('.' ID)?
+# ID <- (ALPH '_') (ALNUM '_')*
+# ALNUM <- [a-zA-Z0-9]
+# ALPH <- [a-zA-Z]+
+~_ <- [ \t\r\n]*
+EOF <- !.
