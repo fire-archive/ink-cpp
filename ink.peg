@@ -6,19 +6,23 @@
 # # https://github.com/PhilippeSigaud/Pegged/wiki/PEG-Basics
 # # From https://github.com/premek/pink/blob/master/pink/parser.lua
 
-LINES <- LINE*
+ROOT <- ITEMS
 
-LINE <- COMM PARA
+ITEMS <- ITEM*
 
-PARA <- (!COMM .)*
+ITEM <- COMM / CONT_LINE
 
-COMM <- COOMOL / COMMML / TODO
+CONT_LINE <- (!COMM .*)
 
-TODO <- _ 'TODO:' _ 
+COMM <- (COMM_OL / COMM_ML / TODO)
+
+COMM_CONT <- ( ![\r\n] .)*
+
+TODO <- _ 'TODO:' _ COMM_CONT _
+# # Removed '//'/"comment"
+COMM_OL <- _ '//' _ COMM_CONT _
 # # Removed '/*'/"comment"
-COMMML <- _ '/*' _ (.'*/')* '*/' _
-# # # Removed '//'/"comment"
-COOMOL <- _ '//' _ #(.NL)* WH
+COMM_ML <- _ '/*' (!'*/' _ COMM_CONT _ ) '*/' 
 
 # Removed 'TODO:'/"todo"
 #TODO <- SP 'TODO:' SP (. NL)* WH
