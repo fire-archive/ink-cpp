@@ -11,10 +11,16 @@
 # https://github.com/PhilippeSigaud/Pegged/wiki/PEG-Basics
 # Ported from https://github.com/premek/pink/blob/master/pink/parser.lua
 
-ROOT <- ITEMS
-ITEMS <- ITEM*
-ITEM <- STMT / CONT_LINE
+ROOT <- LINES
+LINES <- LINE*
+LINE <- STMT / GATHER / PARA
 STMT <- GLUE / DIVERT / KNOT / STITCH / COMM
+
+GATHER <- GATHER_MARKS
+GATHER_MARKS <- GATHER_MARK GATHER_CONT _
+GATHER_MARK <- _ '-' _
+GATHER_CONT <- (![\r\n] .)*
+
 GLUE <- _ ('<>' / 'glue') _
 
 DIVERT <- DIVERT_END / DIVERT_JUMP
@@ -26,7 +32,7 @@ DIVERT_JUMP <- DIVERT_SYM _ ADDR _
 KNOT <- ('=' '='+ ) _ ID _ ('=')* _
 STITCH <- '=' _ ID _ ('=')* _
 
-CONT_LINE <- (!STMT .)*
+PARA <- (!STMT .)*
 COMM <- COMM_OL / COMM_ML / TODO
 COMM_CONT <- ( ![\r\n] .)*
 TODO <- _ 'TODO:' _ COMM_CONT _
