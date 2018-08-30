@@ -33,7 +33,7 @@ GATHER_MARKS <- GATHER_MARK GATHER_MARK* GATHER_CONT _
 GATHER_MARK <- _ '-'
 GATHER_CONT <- (![\r\n] .)*
 
-GLUE <- _ ('<>' / 'glue') _
+GLUE <- _ '<>' _
 
 DIVERT <- DIVERT_END / DIVERT_JUMP
 

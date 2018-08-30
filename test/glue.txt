@@ -3,7 +3,7 @@ We hurried home <>
 -> to_savile_row 
 
 === walk_home ===
-We walked home glue 
+We walked home with freshly bought glue. 
 -> to_savile_row 
 
 === to_savile_row ===
