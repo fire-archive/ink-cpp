@@ -4,32 +4,22 @@
 # # a b (with spaces between them) is a 'sequence' expression
 # # a / b is an 'ordered choice' expression
 # # https://github.com/PhilippeSigaud/Pegged/wiki/PEG-Basics
-# # From https://github.com/premek/pink/blob/master/pink/parser.lua
+# # Ported from https://github.com/premek/pink/blob/master/pink/parser.lua
 
 ROOT <- ITEMS
-
 ITEMS <- ITEM*
-
-ITEM <- COMM / CONT_LINE
-
-CONT_LINE <- (!COMM .*)
-
-COMM <- (COMM_OL / COMM_ML / TODO)
-
+ITEM <- STMT / CONT_LINE
+STMT <- COMM
+CONT_LINE <- (!STMT .)*
+COMM <- COMM_OL / COMM_ML / TODO
 COMM_CONT <- ( ![\r\n] .)*
-
 TODO <- _ 'TODO:' _ COMM_CONT _
-# # Removed '//'/"comment"
 COMM_OL <- _ '//' _ COMM_CONT _
-# # Removed '/*'/"comment"
-COMM_ML <- _ '/*' (!'*/' _ COMM_CONT _ ) '*/' 
-
-# Removed 'TODO:'/"todo"
-#TODO <- SP 'TODO:' SP (. NL)* WH
-
-# # ADDR <- ID ('.' ID)?
-# ID <- (ALPH '_') (ALNUM '_')*
-# ALNUM <- [a-zA-Z0-9]
-# ALPH <- [a-zA-Z]+
+COMM_ML <- _ '/*' _ COMM_ML_CONT '*/'
+COMM_ML_CONT <- (!'*/' .)*
+ADDR <- ID ('.' ID)?
+ID <- (ALPH '_') (ALNUM '_')*
+ALNUM <- [a-zA-Z0-9]
+ALPH <- [a-zA-Z]+
 ~_ <- [ \t\r\n]*
 EOF <- !.
