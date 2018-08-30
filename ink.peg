@@ -1,15 +1,31 @@
-# # ? (option, aka zero-or-one)
-# # * (aka Kleene star, zero-or-more) 
-# # + (one-or-more)
-# # a b (with spaces between them) is a 'sequence' expression
-# # a / b is an 'ordered choice' expression
-# # https://github.com/PhilippeSigaud/Pegged/wiki/PEG-Basics
-# # Ported from https://github.com/premek/pink/blob/master/pink/parser.lua
+# ? (option, aka zero-or-one)
+# lpeg ^-1
+# * (aka Kleene star, zero-or-more) 
+# lpeg ^0
+# + (one-or-more)
+# lpeg ^1
+# a b (with spaces between them) is a 'sequence' expression
+# lpeg *
+# a / b is an 'ordered choice' expression
+# lpeg +
+# https://github.com/PhilippeSigaud/Pegged/wiki/PEG-Basics
+# Ported from https://github.com/premek/pink/blob/master/pink/parser.lua
 
 ROOT <- ITEMS
 ITEMS <- ITEM*
 ITEM <- STMT / CONT_LINE
-STMT <- COMM
+STMT <- GLUE / DIVERT / KNOT / STITCH / COMM
+GLUE <- _ ('<>' / 'glue') _
+
+DIVERT <- DIVERT_END / DIVERT_JUMP
+
+DIVERT_SYM <- '->' _
+DIVERT_END <- DIVERT_SYM 'END' _
+DIVERT_JUMP <- DIVERT_SYM _ ADDR _
+
+KNOT <- ('=' '='+ ) _ ID _ ('=')* _
+STITCH <- '=' _ ID _ ('=')* _
+
 CONT_LINE <- (!STMT .)*
 COMM <- COMM_OL / COMM_ML / TODO
 COMM_CONT <- ( ![\r\n] .)*
@@ -18,8 +34,6 @@ COMM_OL <- _ '//' _ COMM_CONT _
 COMM_ML <- _ '/*' _ COMM_ML_CONT '*/'
 COMM_ML_CONT <- (!'*/' .)*
 ADDR <- ID ('.' ID)?
-ID <- (ALPH '_') (ALNUM '_')*
-ALNUM <- [a-zA-Z0-9]
-ALPH <- [a-zA-Z]+
+ID <- ([a-zA-Z]+ / '_') ([a-zA-Z0-9] / '_')*
 ~_ <- [ \t\r\n]*
 EOF <- !.
