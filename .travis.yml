@@ -20,5 +20,6 @@ before_script:
 script: make && make ink-cpp-test && ./ink-cpp-test --use-colour no
 
 env:
+  - CXX=g++-9
   global:
   - LANG="en_US.UTF-8"
