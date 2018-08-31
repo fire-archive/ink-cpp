@@ -7,6 +7,7 @@ matrix:
           packages: ['g++-8']
       env:
         - CXX=g++-8
+        - CXX=gcc-8
     - compiler: clang
       addons:
         apt:
@@ -14,6 +15,7 @@ matrix:
           packages: ['clang-6.0']
       env:
         - CXX=clang++-6.0
+        - CC=clang-6.0
 
 before_script:
   - mkdir build
