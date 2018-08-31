@@ -20,7 +20,4 @@ before_script:
   - cd build
   - cmake ..
 
-env:
-  - CXX=clang++-6.0 
-
 script: make && make ink-cpp-test && ./ink-cpp-test --use-colour no
