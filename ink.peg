@@ -34,12 +34,12 @@ OPT_ANS <- OPT_ANS_WITH_DIV / OPT_ANS_WITHOUT_DIV
 OPT_ANS_CONTENT <- (![\r\n] .)*
 
 OPT_STARS <- OPT_STAR OPT_STAR* OPT_ANS OPT_CONT _
-OPT_STAR <- _ '*'
+~OPT_STAR <- _ '*'
 OPT_CONT <- (![\r\n] .)*
 
 GATHER <- GATHER_MARKS
 GATHER_MARKS <- GATHER_MARK GATHER_MARK* GATHER_CONTENT _
-GATHER_MARK <- _ '-'
+~GATHER_MARK <- _ '-'
 GATHER_CONTENT <- (![\r\n] .)*
 
 GLUE <- _ '<>' _
@@ -54,12 +54,15 @@ KNOT <- _ ('=' '='+ ) _ ID _ ('=')* _
 STITCH <- '=' _ ID _ ('=')* _
 
 COMM <- COMM_OL / COMM_ML / TODO
-COMM_CONT <- ( ![\r\n] .)*
-TODO <- _ 'TODO:' _ COMM_CONT _
-COMM_OL <- _ '//' _ COMM_CONT _
-COMM_ML <- _ '/*' _ COMM_ML_CONTENT '*/'
+TODO_MARK <- 'TODO:' _
+TODO <- _ TODO_MARK _ TODO_CONTENT
+TODO_CONTENT <- !TODO_MARK (![\r\n] .)*
+COMM_OL <- _ '//' / _ COMM_OL_CONTENT
+COMM_OL_CONTENT <- !'//' (![\r\n] .)*
+COMM_ML <- _ '/*' / _ COMM_ML_CONTENT '*/'
 COMM_ML_CONTENT <- (!'*/' .)*
 ADDR <- ID ('.' ID)?
 ID <- ([a-zA-Z]+ / '_') ([a-zA-Z0-9] / '_')*
+~NL <- [\r\n]*
 ~_ <- [ \t\r\n]*
 EOF <- !.
