@@ -104,6 +104,12 @@ EOF <- !.
 )";
 					 
 		parser parser;
+		// clang-format on
+		std::stringstream out;
+		parser.log = [&out](size_t line, size_t col, const string &msg) {
+			out << line << ":" << col << ": " << msg << "\n";
+		};
+
 		auto ok = parser.load_grammar(grammar);
 		assert(ok);
 
@@ -113,6 +119,7 @@ EOF <- !.
 			shared_ptr<peg::Ast> ast;
 			if (parser.parse(R"(TODO: This is a todo.)", ast)) {
 				ast = peg::AstOptimizer(true).optimize(ast);
+				out << peg::ast_to_s(ast);
 			}
 			THEN("return ast") {
 				REQUIRE(ast->name == "TODO_CONTENT");
