@@ -11,19 +11,17 @@
 # https://github.com/PhilippeSigaud/Pegged/wiki/PEG-Basics
 # Ported from https://github.com/premek/pink/blob/master/pink/parser.lua
 
-ROOT <- LINES
 LINES <- TAG_GLOBAL* LINE*
 LINE <- STMT / GATHER / PARA
 STMT <- GLUE / DIVERT / KNOT / STITCH / OPTION / COMM
 
-PARA <- TAG_ABOVE / TEXT
-TEXT <- (!STMT .)*
+PARA <- TAG_ABOVE / TEXT TAG_END
+TEXT <- (!TAG_END .)* 
+
+TAG_END <- TAG
 
 TAG_ABOVE <- TAG
-TAG_END <- TAG
 TAG_GLOBAL <- TAG
-
-REST <- .*
 
 HASH <- '#' _
 TAG <- HASH TAG_CONTENT _
