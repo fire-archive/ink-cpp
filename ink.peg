@@ -12,20 +12,21 @@
 # Ported from https://github.com/premek/pink/blob/master/pink/parser.lua
 
 ROOT <- LINES
-LINES <- LINE*
+LINES <- TAG_GLOBAL* LINE*
 LINE <- STMT / GATHER / PARA
 STMT <- GLUE / DIVERT / KNOT / STITCH / OPTION / COMM
 
-PARA <- TAG_GLOBAL / TEXT
-# !(!(!HASH STMT [\r\n]*) )
+PARA <- TAG_ABOVE / TEXT
 TEXT <- (!STMT .)*
 
-TAG_GLOBAL <- TAG _
+TAG_ABOVE <- TAG
+TAG_END <- TAG
+TAG_GLOBAL <- TAG
+
+REST <- .*
 
 HASH <- '#' _
-TAG <- HASH TAG_CONTENT
-TAG_ABOVE <- TEXT (!STMT TAG .)* 
-TAG_END <- (!STMT TAG .)* _
+TAG <- HASH TAG_CONTENT _
 TAG_CONTENT <- (![\r\n] .)*
 
 OPTION <- OPT_STARS OPT_ANS _
@@ -53,7 +54,7 @@ DIVERT_SYM <- '->' _
 DIVERT_END <- DIVERT_SYM 'END' _
 DIVERT_JUMP <- DIVERT_SYM _ ADDR _
 
-KNOT <- ('=' '='+ ) _ ID _ ('=')* _
+KNOT <- _ ('=' '='+ ) _ ID _ ('=')* _
 STITCH <- '=' _ ID _ ('=')* _
 
 COMM <- COMM_OL / COMM_ML / TODO
