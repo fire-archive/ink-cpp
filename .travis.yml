@@ -7,7 +7,13 @@ matrix:
           packages: ['g++-8']
       env:
         - CXX=g++-8
-        - CXX=gcc-8
+        - CXX=gcc-8       
+      before_script:
+        - mkdir build
+        - cd build
+        - cmake ..
+
+      script: make && make ink-cpp-test && ./ink-cpp-test --use-colour no
     - compiler: clang
       addons:
         apt:
@@ -16,10 +22,8 @@ matrix:
       env:
         - CXX=clang++-6.0
         - CC=clang-6.0
-
-before_script:
-  - mkdir build
-  - cd build
-  - cmake ..
-
-script: make && make ink-cpp-test && ./ink-cpp-test --use-colour no
+      before_script:
+        - mkdir build
+        - cd build
+        - cmake ..
+      script: make && make ink-cpp-test && ./ink-cpp-test --use-colour no    
