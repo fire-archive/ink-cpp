@@ -1,29 +1,24 @@
-matrix:
-  include:
-    - compiler: gcc
-      addons:
-        apt:
-          sources: ['ubuntu-toolchain-r-test']
-          packages: ['g++-8']
-      env:
-        - CXX=g++-8
-        - CXX=gcc-8       
-      before_script:
-        - mkdir build
-        - cd build
-        - cmake ..
+language: cpp
+sudo: false
+dist: trusty
+compiler:
+- g++
+os:
+- linux
 
-      script: make && make ink-cpp-test && ./ink-cpp-test --use-colour no
-    - compiler: clang
-      addons:
-        apt:
-          sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-trusty-6.0']
-          packages: ['clang-6.0']
-      env:
-        - CXX=clang++-6.0
-        - CC=clang-6.0
-      before_script:
-        - mkdir build
-        - cd build
-        - cmake ..
-      script: make && make ink-cpp-test && ./ink-cpp-test --use-colour no    
+addons:
+    apt:
+        sources:
+            - ubuntu-toolchain-r-test
+        packages:
+            - lcov
+
+before_script:
+- mkdir build
+- cd build
+- cmake ..
+script: make && make ink-cpp-test && ./ink-cpp-test --use-colour no
+
+env:
+  global:
+  - LANG="en_US.UTF-8"
