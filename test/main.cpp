@@ -33,77 +33,77 @@ SCENARIO("vectors can be sized and resized", "[vector]") {
 
 	GIVEN("An ink grammar") {
 		// clang-format off
-    auto grammar = R"(
-        # ? (option, aka zero-or-one)
-		# lpeg ^-1
-		# * (aka Kleene star, zero-or-more) 
-		# lpeg ^0
-		# + (one-or-more)
-		# lpeg ^1
-		# a b (with spaces between them) is a 'sequence' expression
-		# lpeg *
-		# a / b is an 'ordered choice' expression
-		# lpeg +
-		# https://github.com/PhilippeSigaud/Pegged/wiki/PEG-Basics
-		# Ported from https://github.com/premek/pink/blob/master/pink/parser.lua
+		auto grammar = R"(
+			# ? (option, aka zero-or-one)
+			# lpeg ^-1
+			# * (aka Kleene star, zero-or-more) 
+			# lpeg ^0
+			# + (one-or-more)
+			# lpeg ^1
+			# a b (with spaces between them) is a 'sequence' expression
+			# lpeg *
+			# a / b is an 'ordered choice' expression
+			# lpeg +
+			# https://github.com/PhilippeSigaud/Pegged/wiki/PEG-Basics
+			# Ported from https://github.com/premek/pink/blob/master/pink/parser.lua
 
-		LINES <- TAG_GLOBAL* LINE*
-		LINE <- STMT / GATHER / PARA
-		STMT <- GLUE / DIVERT / KNOT / STITCH / OPTION / COMM
+			LINES <- TAG_GLOBAL* LINE*
+			LINE <- STMT / GATHER / PARA
+			STMT <- GLUE / DIVERT / KNOT / STITCH / OPTION / COMM
 
-		PARA <- TAG_ABOVE / TEXT TAG_END
-		TEXT <- (!TAG_END .)* _
+			PARA <- TAG_ABOVE / TEXT TAG_END
+			TEXT <- (!TAG_END .)* _
 
-		TAG_END <- TAG
-		TAG_ABOVE <- TAG
-		TAG_GLOBAL <- TAG
+			TAG_END <- TAG
+			TAG_ABOVE <- TAG
+			TAG_GLOBAL <- TAG
 
-		HASH <- '#' _
-		TAG <- ~HASH TAG_CONTENT _
-		TAG_CONTENT <- (![\r\n] .)*
+			HASH <- '#' _
+			TAG <- ~HASH TAG_CONTENT _
+			TAG_CONTENT <- (![\r\n] .)*
 
-		OPTION <- OPT_STARS OPT_ANS _
-		OPT_DIV_CONT <- (!']' .)*
-		OPT_ANS_WITH_DIV <- _ '[' _ OPT_DIV_CONT _ ']' / _ OPT_ANS_CONTENT _
-		OPT_ANS_WITHOUT_DIV <- _
-		OPT_ANS <- OPT_ANS_WITH_DIV / OPT_ANS_WITHOUT_DIV
-		OPT_ANS_CONTENT <- (![\r\n] .)*
+			OPTION <- OPT_STARS OPT_ANS _
+			OPT_DIV_CONT <- (!']' .)*
+			OPT_ANS_WITH_DIV <- _ '[' _ OPT_DIV_CONT _ ']' / _ OPT_ANS_CONTENT _
+			OPT_ANS_WITHOUT_DIV <- _
+			OPT_ANS <- OPT_ANS_WITH_DIV / OPT_ANS_WITHOUT_DIV
+			OPT_ANS_CONTENT <- (![\r\n] .)*
 
-		OPT_STARS <- OPT_STAR OPT_STAR* OPT_ANS OPT_CONT _
-		~OPT_STAR <- _ '*'
-		OPT_CONT <- (![\r\n] .)*
+			OPT_STARS <- OPT_STAR OPT_STAR* OPT_ANS OPT_CONT _
+			~OPT_STAR <- _ '*'
+			OPT_CONT <- (![\r\n] .)*
 
-		GATHER <- GATHER_MARKS
-		GATHER_MARKS <- GATHER_MARK _ GATHER_MARK* _ GATHER_CONTENT
-		~GATHER_MARK <- _ '-'
-		GATHER_CONTENT <- (![\r\n] .)*
+			GATHER <- GATHER_MARKS
+			GATHER_MARKS <- GATHER_MARK _ GATHER_MARK* _ GATHER_CONTENT
+			~GATHER_MARK <- _ '-'
+			GATHER_CONTENT <- (![\r\n] .)*
 
-		GLUE <- _ '<>' _
+			GLUE <- _ '<>' _
 
-		DIVERT <- DIVERT_END / DIVERT_JUMP
+			DIVERT <- DIVERT_END / DIVERT_JUMP
 
-		DIVERT_SYM <- '->' _
-		DIVERT_END <- DIVERT_SYM 'END' _
-		DIVERT_JUMP <- DIVERT_SYM _ ADDR _
+			DIVERT_SYM <- '->' _
+			DIVERT_END <- DIVERT_SYM 'END' _
+			DIVERT_JUMP <- DIVERT_SYM _ ADDR _
 
-		KNOT <- _ ('=' '='+ ) _ ID _ ('=')* _
-		STITCH <- '=' _ ID _ ('=')* _
+			KNOT <- _ ('=' '='+ ) _ ID _ ('=')* _
+			STITCH <- '=' _ ID _ ('=')* _
 
-		COMM <- COMM_OL / COMM_ML / TODO
-		TODO <- _ 'TODO:' ' '* TODO_CONTENT ' '* [\r\n]+
-		TODO_CONTENT <- (![\r\n] .)*
-		COMM_OL <- _ '//' ' '* COMM_OL_CONTENT ' '* [\r\n]+
-		COMM_OL_CONTENT <- (![\r\n] .)*
-		COMM_ML <- _ '/*' [ \r\n]* COMM_ML_CONTENT ' '* '*/' [\r\n]+
-		COMM_ML_CONTENT <- (!'*/' .)*
-		ADDR <- ID ('.' ID)?
-		ID <- ([a-zA-Z]+ / '_') ([a-zA-Z0-9] / '_')*
-		~NL <- [\r\n]*
-		~_ <- [ \t\r\n]*
-		EOF <- !.
-    )";
+			COMM <- COMM_OL / COMM_ML / TODO
+			TODO <- _ 'TODO:' ' '* TODO_CONTENT ' '* [\r\n]+
+			TODO_CONTENT <- (![\r\n] .)*
+			COMM_OL <- _ '//' ' '* COMM_OL_CONTENT ' '* [\r\n]+
+			COMM_OL_CONTENT <- (![\r\n] .)*
+			COMM_ML <- _ '/*' [ \r\n]* COMM_ML_CONTENT ' '* '*/' [\r\n]+
+			COMM_ML_CONTENT <- (!'*/' .)*
+			ADDR <- ID ('.' ID)?
+			ID <- ([a-zA-Z]+ / '_') ([a-zA-Z0-9] / '_')*
+			~NL <- [\r\n]*
+			~_ <- [ \t\r\n]*
+			EOF <- !.
+		)";
 					 
-    parser parser;
+		parser parser;
 		// clang-format on
 
 		parser.log = [](size_t line, size_t col, const string &msg) {
