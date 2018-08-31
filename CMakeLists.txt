@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.9)
-project (ink-cpp)
-add_executable (ink-cpp main.cpp)
-target_compile_features(ink-cpp PUBLIC cxx_std_11)
+project (test)
+add_executable (test test/main.cpp)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/.)
+target_compile_features(test PUBLIC cxx_std_11)
