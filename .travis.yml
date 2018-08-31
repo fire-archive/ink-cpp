@@ -9,4 +9,4 @@ before_script:
   - cd build
   - cmake ..
 
-script: make && make ink-cpp-test && ./test
+script: make && make ink-cpp-test && ./ink-cpp-test
