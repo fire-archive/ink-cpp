@@ -16,22 +16,34 @@ LINES <- LINE*
 LINE <- STMT / GATHER / PARA
 STMT <- GLUE / DIVERT / KNOT / STITCH / OPTION / COMM
 
+PARA <- TAG_ABOVE TEXT TAG_END / TAG_GLOBAL 
+# !(!(!HASH STMT [\r\n]*) )
+TEXT <- (!STMT .)*
+
+TAG_GLOBAL <- TAG
+
+HASH <- '#' _
+TAG <- HASH TAG_CONTENT
+TAG_ABOVE <- (!STMT TAG .)* 
+TAG_END <- (!STMT TAG .)* _
+TAG_CONTENT <- (![\r\n] .)*
+
 OPTION <- OPT_STARS OPT_ANS _
 
 OPT_DIV_CONT <- (!']' .)*
-OPT_ANS_WITH_DIV <- _ '[' _ OPT_DIV_CONT _ ']' / OPT_ANS_CONT _
+OPT_ANS_WITH_DIV <- _ '[' _ OPT_DIV_CONT _ ']' / OPT_ANS_CONTENT _
 OPT_ANS_WITHOUT_DIV <- _
 OPT_ANS <- OPT_ANS_WITH_DIV / OPT_ANS_WITHOUT_DIV
-OPT_ANS_CONT <- (![\r\n] .)*
+OPT_ANS_CONTENT <- (![\r\n] .)*
 
 OPT_STARS <- OPT_STAR OPT_STAR* OPT_ANS OPT_CONT _
 OPT_STAR <- _ '*'
 OPT_CONT <- (![\r\n] .)*
 
 GATHER <- GATHER_MARKS
-GATHER_MARKS <- GATHER_MARK GATHER_MARK* GATHER_CONT _
+GATHER_MARKS <- GATHER_MARK GATHER_MARK* GATHER_CONTENT _
 GATHER_MARK <- _ '-'
-GATHER_CONT <- (![\r\n] .)*
+GATHER_CONTENT <- (![\r\n] .)*
 
 GLUE <- _ '<>' _
 
@@ -44,13 +56,12 @@ DIVERT_JUMP <- DIVERT_SYM _ ADDR _
 KNOT <- ('=' '='+ ) _ ID _ ('=')* _
 STITCH <- '=' _ ID _ ('=')* _
 
-PARA <- (!STMT .)*
 COMM <- COMM_OL / COMM_ML / TODO
 COMM_CONT <- ( ![\r\n] .)*
 TODO <- _ 'TODO:' _ COMM_CONT _
 COMM_OL <- _ '//' _ COMM_CONT _
-COMM_ML <- _ '/*' _ COMM_ML_CONT '*/'
-COMM_ML_CONT <- (!'*/' .)*
+COMM_ML <- _ '/*' _ COMM_ML_CONTENT '*/'
+COMM_ML_CONTENT <- (!'*/' .)*
 ADDR <- ID ('.' ID)?
 ID <- ([a-zA-Z]+ / '_') ([a-zA-Z0-9] / '_')*
 ~_ <- [ \t\r\n]*

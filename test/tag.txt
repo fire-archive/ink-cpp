@@ -1,0 +1,4 @@
+# This is a global tag.
+=== content
+# This is an above tag.
+A line of normal game-text. # This is a end tag.
