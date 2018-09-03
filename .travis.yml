@@ -1,23 +1,26 @@
-language: cpp
-sudo: false
-dist: trusty
-compiler:
-- g++
-os:
-- linux
-
-addons:
-    apt:
-        sources:
-            - ubuntu-toolchain-r-test
-        packages:
-            - lcov
+matrix:
+  include:
+    - compiler: gcc
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-8']
+      env:
+        - CXX=g++-8
+    - compiler: clang
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-trusty-6.0']
+          packages: ['clang-6.0']
+      env:
+        - CXX=clang++-6.0
 
 before_script:
-- mkdir build
-- cd build
-- cmake ..
-script: make && make ink-cpp-test && ./ink-cpp-test --use-colour no
+  - mkdir build
+  - cd build
+  - cmake ..
 
 env:
-  - CXX=g++-9
+  - CXX=clang++-6.0 
+
+script: make && make ink-cpp-test && ./ink-cpp-test --use-colour no
