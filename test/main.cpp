@@ -114,6 +114,7 @@ EOF <- !.
 		assert(ok);
 
 		parser = parser.enable_ast();
+		parser.enable_packrat_parsing();
 
 		WHEN("given an ink file") {
 			shared_ptr<peg::Ast> ast;
@@ -126,36 +127,5 @@ EOF <- !.
 				REQUIRE(ast->token == "This is a todo.");
 			}
 		}
-
-		//// (3) Setup actions
-		//parser["Additive"] = [](const SemanticValues& sv) {
-		//    switch (sv.choice()) {
-		//    case 0:  // "Multitive '+' Additive"
-		//        return sv[0].get<int>() + sv[1].get<int>();
-		//    default: // "Multitive"
-		//        return sv[0].get<int>();
-		//    }
-		//};
-
-		//parser["Multitive"] = [](const SemanticValues& sv) {
-		//    switch (sv.choice()) {
-		//    case 0:  // "Primary '*' Multitive"
-		//        return sv[0].get<int>() * sv[1].get<int>();
-		//    default: // "Primary"
-		//        return sv[0].get<int>();
-		//    }
-		//};
-
-		//parser["Number"] = [](const SemanticValues& sv) {
-		//    return stoi(sv.token(), nullptr, 10);
-		//};
-
-		// (4) Parse
-		parser.enable_packrat_parsing(); // Enable packrat parsing.
-
-		//int val;
-		//parser.parse(" (1 + 2) * 3 ", val);
-
-		//assert(val == 9);
 	}
 }
